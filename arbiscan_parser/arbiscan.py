@@ -1,4 +1,4 @@
-import requests
+import cloudscraper
 from bs4 import BeautifulSoup
 from loguru import logger
 
@@ -27,7 +27,9 @@ class Arbiscan:
         """
         logger.info(f"Парсинг страницы {page}")
         url = f'https://arbiscan.io/tokentxns?a={self.address}&p={page}'
-        html = requests.get(url).text
+        scraper = cloudscraper.create_scraper(delay=10, browser={'custom': 'ScraperBot/1.0', })
+        req = scraper.get(url)
+        html = req.text
         soup = BeautifulSoup(html, 'html.parser')
 
         count_pages = int(soup.select('.page-link > strong')[-1].text.strip())
